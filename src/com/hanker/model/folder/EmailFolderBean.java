@@ -1,5 +1,9 @@
 package com.hanker.model.folder;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Flags.Flag;
+
 import com.hanker.model.EmailMessageBean;
 import com.hanker.view.ViewFactory;
 
@@ -12,7 +16,6 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 	private boolean topElement = false;
 	private int unreadMessageCount;
 	private String name;
-	@SuppressWarnings("unused")
 	private String completeName;
 	private ObservableList<EmailMessageBean> data = FXCollections.observableArrayList();
 
@@ -53,9 +56,16 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 		updateValue();
 	}
 	
-	public void addEmail(EmailMessageBean message){
-		data.add(message);
-		if (!message.isRead()){
+	public void addEmail(Message message) throws MessagingException{
+		boolean isRead = message.getFlags().contains(Flag.SEEN);
+		EmailMessageBean emailMessageBean = new EmailMessageBean(
+				message.getSubject(), 
+				message.getFrom()[0].toString(), 
+				message.getSize(),
+				"", 
+				message.getFlags().contains(Flag.SEEN));
+		data.add(emailMessageBean);
+		if (!isRead){
 			incrementUnreadMessageCount(1);
 		}
 	}

@@ -3,8 +3,10 @@ package com.hanker.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.hanker.controller.services.CreateAndRegisterEmailAccountService;
+import com.hanker.model.EmailAccountBean;
+import com.hanker.model.EmailConstants;
 import com.hanker.model.EmailMessageBean;
-import com.hanker.model.SampleData;
 import com.hanker.model.SizeObject;
 import com.hanker.model.folder.EmailFolderBean;
 import com.hanker.model.table.BoldableRowFactory;
@@ -47,7 +49,10 @@ public class MainController extends AbstractController{
     
     @FXML
     void btnClicked(ActionEvent event) {
-    	System.out.println("Button Clicked!!");
+//		EmailAccountBean emailAccountBean = new EmailAccountBean(
+//				"hanker.test@gmail.com", "testzhengPassword");
+//		EmailFolderBean<String> folder = getModelAccess().getSelectedFolder();
+//		emailAccountBean.addEmailsToData(folder.getData(), folder.getValue());
     }
     
     @FXML
@@ -72,7 +77,6 @@ public class MainController extends AbstractController{
 		super(modelAccess);
 	}
     
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ViewFactory viewFactory = ViewFactory.defaultViewFactory;
@@ -83,38 +87,35 @@ public class MainController extends AbstractController{
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
 		sizeCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, SizeObject>("size"));
 		
-		// Initialize EmailTreeView
+		// Initialize EmailTreeView with an dummy root, so that it can
+		// support several email account
 		EmailFolderBean<String> root = new EmailFolderBean<>("");
 		emailTreeView.setRoot(root);
 		emailTreeView.setShowRoot(false);
 		
-		EmailFolderBean<String> account1 = new EmailFolderBean<>("example@gmail.com");
-		root.getChildren().add(account1);
-		EmailFolderBean<String> inbox = new EmailFolderBean<>("Inbox", "CompleteInbox");
-		EmailFolderBean<String> sent = new EmailFolderBean<>("Sent", "CompleteSend");
-			EmailFolderBean<String> sub1 = new EmailFolderBean<>("Subfolder1", "CompleteSubfolder1");
-			EmailFolderBean<String> sub2 = new EmailFolderBean<>("Subfolder2", "CompleteSubfolder2");
-			sent.getChildren().addAll(sub1, sub2);
-		EmailFolderBean<String> spam = new EmailFolderBean<>("Spam", "CompleteSpam");
-		account1.getChildren().addAll(inbox, sent, spam);
-		inbox.getData().addAll(SampleData.Inbox);
-		sent.getData().addAll(SampleData.Sent);
-		spam.getData().addAll(SampleData.Spam);		
-		
+		// connect to email server asynchronously
+		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService = new CreateAndRegisterEmailAccountService(
+				"hanker.test@gmail.com",
+				"testzhengPassword",
+				root);
+		createAndRegisterEmailAccountService.start();
 
 		// Initialize EmailTableView's right clicked menu
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
 		
-		// Set Mouse Clicked Event
+		// On clicking the email folder, display all emails in that folder in emailTableView
 		emailTreeView.setOnMouseClicked(e -> {
+			// get the selected email folder
 			EmailFolderBean<String> item = (EmailFolderBean<String>) emailTreeView.getSelectionModel().getSelectedItem();
 			if (item != null && !item.isTopElement()){
+				// display the e-mails in that selected folder
 				emailTableView.setItems(item.getData());
 				getModelAccess().setSelectedFolder(item);
 				// clear the selected message
 				getModelAccess().setSelectedMessage(null);
 			}
 		});
+		// On clicking the email, display the content of that email in emailWebView
 		emailTableView.setOnMouseClicked(e -> {
 			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
 			if (message != null){
@@ -122,12 +123,18 @@ public class MainController extends AbstractController{
 				getModelAccess().setSelectedMessage(message);
 			}
 		});
+		// On clicking the "show details" menu, create a new window and display the content of that email
 		showDetails.setOnAction(e -> {
 			Scene scene = viewFactory.getEmailDetailsScene();
 			Stage stage = new Stage();
 			stage.setScene(scene);
 			stage.show();
 		});
+		
+		// After all the initialization check the connection
+		if (createAndRegisterEmailAccountService.getValue() == EmailConstants.LOGIN_STATE_SUCCESS){
+			System.out.println("Successful connection!");
+		}
 	}
 
 }

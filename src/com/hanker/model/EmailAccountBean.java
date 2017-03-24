@@ -46,7 +46,7 @@ public class EmailAccountBean {
 	public EmailAccountBean(String emailAddress, String password){
 		this.emailAddress = emailAddress;
 		this.password = password;
-		
+		// Setting the protocol of the email connection
 		properties = new Properties();
 		properties.put("mail.store.protocol", "imaps");
 		properties.put("mail.transport.protocol" , "smtps");
@@ -54,15 +54,14 @@ public class EmailAccountBean {
 		properties.put("mail.smtps.auth", "true");
 		properties.put("incomingHost", "imap.gmail.com");
 		properties.put("outgoingHost", "smtp.gmail.com");
-		
+		// Setting account information 
 		Authenticator auth = new Authenticator(){
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication(){
 				return new PasswordAuthentication(emailAddress, password);
 			}
 		};
-		
-		// Connecting
+		// Connecting to the sever, connected information is in `store`
 		session = Session.getInstance(properties, auth);
 		try{
 			this.store = session.getStore();
@@ -75,31 +74,32 @@ public class EmailAccountBean {
 			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_CREDENTIALS;
 		}
 	}
+//	
+//	/**
+//	 * Construct {@code EmailMessageBean} instances and add the instances
+//	 * into the data, that is where the message should be presented.
+//	 * @param data: the place to display the message
+//	 */
+//	public void addEmailsToData(ObservableList<EmailMessageBean> data, String folderName){
+//		try {
+//			Folder folder = store.getFolder(folderName);
+//			folder.open(Folder.READ_ONLY);
+//			for(int i = 1 ; i < folder.getMessageCount(); i ++){
+//				Message message = folder.getMessage(i);
+//				EmailMessageBean messageBean = new EmailMessageBean(
+//						message.getSubject(),
+//						message.getFrom()[0].toString(), 
+//						message.getSize(),
+//						"",
+//						message.getFlags().contains(Flag.SEEN));
+//				data.add(messageBean);
+//				System.out.println("Got: " + messageBean);
+//			}
+//		} catch (MessagingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
-	/**
-	 * Construct {@code EmailMessageBean} instances and add the instances
-	 * into the data, that is where the message should be presented.
-	 * @param data: the place to display the message
-	 */
-	public void addEmailsToData(ObservableList<EmailMessageBean> data){
-		try {
-			Folder folder = store.getFolder("INBOX");
-			folder.open(Folder.READ_ONLY);
-			for(int i = 1 ; i < folder.getMessageCount(); i ++){
-				Message message = folder.getMessage(i);
-				EmailMessageBean messageBean = new EmailMessageBean(
-						message.getSubject(),
-						message.getFrom()[0].toString(), 
-						message.getSize(),
-						"",
-						message.getFlags().contains(Flag.SEEN));
-				data.add(messageBean);
-				System.out.println("Got: " + messageBean);
-			}
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 }
