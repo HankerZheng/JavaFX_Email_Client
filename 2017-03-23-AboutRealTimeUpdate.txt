@@ -1,0 +1,8 @@
+The method used in the lecture to real-time update received message is:
+- Maintain a List of all the folders in `ModelAccess`
+- Add a `MessageCountListener` to each folder
+- Assign a service that checks all the `MessageCount` of each folder periodically. Once the messageCount of one folder is changed, it will deliver a `MessageCountEvent` event we are lisitening to
+
+The method I was planning to implement:
+- Store the mapping from `EmailFolderBean` to `javax.mail.Folder`
+- Fetch the message only on clicking the corresponding folder

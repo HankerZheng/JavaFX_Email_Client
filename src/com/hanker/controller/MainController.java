@@ -3,8 +3,10 @@ package com.hanker.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
 import com.hanker.controller.services.CreateAndRegisterEmailAccountService;
-import com.hanker.model.EmailAccountBean;
+import com.hanker.controller.services.FolderUpdateService;
+import com.hanker.controller.services.MessageRendererService;
 import com.hanker.model.EmailConstants;
 import com.hanker.model.EmailMessageBean;
 import com.hanker.model.SizeObject;
@@ -12,6 +14,7 @@ import com.hanker.model.folder.EmailFolderBean;
 import com.hanker.model.table.BoldableRowFactory;
 import com.hanker.view.ViewFactory;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -82,6 +85,12 @@ public class MainController extends AbstractController{
 		ViewFactory viewFactory = ViewFactory.defaultViewFactory;
 		emailTableView.setRowFactory(e -> new BoldableRowFactory<>());
 		
+		// Service Initialization
+		MessageRendererService messageRendererService = new MessageRendererService(emailContentView.getEngine());
+
+		FolderUpdateService folderUpdateService = new FolderUpdateService(getModelAccess().getFolderList());
+		folderUpdateService.start();
+		
 		// Bind the column with the field of type `EmailMessageBean`
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
@@ -97,7 +106,8 @@ public class MainController extends AbstractController{
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService = new CreateAndRegisterEmailAccountService(
 				"hanker.test@gmail.com",
 				"testzhengPassword",
-				root);
+				root,
+				getModelAccess());
 		createAndRegisterEmailAccountService.start();
 
 		// Initialize EmailTableView's right clicked menu
@@ -117,10 +127,11 @@ public class MainController extends AbstractController{
 		});
 		// On clicking the email, display the content of that email in emailWebView
 		emailTableView.setOnMouseClicked(e -> {
-			EmailMessageBean message = emailTableView.getSelectionModel().getSelectedItem();
-			if (message != null){
-				emailContentView.getEngine().loadContent(message.getContent());
-				getModelAccess().setSelectedMessage(message);
+			EmailMessageBean messageBean = emailTableView.getSelectionModel().getSelectedItem();
+			if (messageBean != null){
+				messageRendererService.setMessageBean(messageBean);
+				Platform.runLater(messageRendererService);
+				getModelAccess().setSelectedMessage(messageBean);
 			}
 		});
 		// On clicking the "show details" menu, create a new window and display the content of that email

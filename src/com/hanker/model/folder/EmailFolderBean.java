@@ -10,6 +10,9 @@ import com.hanker.view.ViewFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+/*
+ * Mapping from TreeItem to EmailMessageBean
+ */
 
 public class EmailFolderBean<T> extends TreeItem<String> {
 	
@@ -56,15 +59,19 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 		updateValue();
 	}
 	
-	public void addEmail(Message message) throws MessagingException{
+	public void addEmail(int pos, Message message) throws MessagingException{
 		boolean isRead = message.getFlags().contains(Flag.SEEN);
 		EmailMessageBean emailMessageBean = new EmailMessageBean(
 				message.getSubject(), 
 				message.getFrom()[0].toString(), 
 				message.getSize(),
-				"", 
+				message, 
 				message.getFlags().contains(Flag.SEEN));
-		data.add(emailMessageBean);
+		if (pos < 0){
+			data.add(emailMessageBean);
+		}else{
+			data.add(pos, emailMessageBean);
+		}
 		if (!isRead){
 			incrementUnreadMessageCount(1);
 		}

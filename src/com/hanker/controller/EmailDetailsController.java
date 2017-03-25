@@ -29,10 +29,9 @@ public class EmailDetailsController extends AbstractController{
 		// TODO Auto-generated method stub
 		System.out.println("EmailDetailsController initialized!");
 		
-		EmailMessageBean message = getModelAccess().getSelectedMessage();
-		subject.setText("Subject: " + message.getSubject());
-		sender.setText("Sender: " + message.getSender());
-		emailDetails.getEngine().loadContent(message.getContent());		
+		EmailMessageBean messageBean = getModelAccess().getSelectedMessage();
+		subject.setText("Subject: " + messageBean.getSubject());
+		sender.setText("Sender: " + messageBean.getSender());
 	}
 
 }

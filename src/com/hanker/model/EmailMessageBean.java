@@ -1,5 +1,7 @@
 package com.hanker.model;
 
+import javax.mail.Message;
+
 import com.hanker.model.table.AbstractTableItem;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,14 +11,14 @@ public class EmailMessageBean extends AbstractTableItem {
 	private SimpleStringProperty subject;
 	private SimpleStringProperty sender;
 	private SimpleObjectProperty<SizeObject> size;
-	private String content;
+	private Message messageRef;
 	
-	public EmailMessageBean(String subject, String sender, int size, String content, boolean isRead){
+	public EmailMessageBean(String subject, String sender, int size, Message message, boolean isRead){
 		super(isRead);
 		this.subject = new SimpleStringProperty(subject);
 		this.sender = new SimpleStringProperty(sender);
 		this.size = new SimpleObjectProperty<SizeObject>(new SizeObject(size));
-		this.content = content;
+		this.messageRef = message;
 	}
 	
 	public String getSender(){
@@ -28,8 +30,8 @@ public class EmailMessageBean extends AbstractTableItem {
 	public SizeObject getSize(){
 		return size.get();
 	}
-	public String getContent(){
-		return content;
+	public Message getMessageRef(){
+		return messageRef;
 	}
 
 	@Override

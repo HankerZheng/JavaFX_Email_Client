@@ -1,5 +1,6 @@
 package com.hanker.controller.services;
 
+import com.hanker.controller.ModelAccess;
 import com.hanker.model.EmailAccountBean;
 import com.hanker.model.EmailConstants;
 import com.hanker.model.folder.EmailFolderBean;
@@ -21,13 +22,15 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailConstants
 	private String emailAddress;
 	private String password;
 	private EmailFolderBean<String> folderRoot;
+	private ModelAccess modelAccess;
 	
 	
 	public CreateAndRegisterEmailAccountService(
-			String emailAddress, String password, EmailFolderBean<String> folderRoot) {
+			String emailAddress, String password, EmailFolderBean<String> folderRoot, ModelAccess ma) {
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.folderRoot = folderRoot;
+		this.modelAccess = ma;
 	}
 
 
@@ -43,7 +46,7 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailConstants
 					EmailFolderBean<String> emailFolderBean = new EmailFolderBean<>(emailAddress);
 					folderRoot.getChildren().add(emailFolderBean);
 					// Create and start FetchFolderService
-					FetchFolderService fetchFolderService = new FetchFolderService(emailFolderBean, emailAccount);
+					FetchFolderService fetchFolderService = new FetchFolderService(emailFolderBean, emailAccount, modelAccess);
 					fetchFolderService.start();
 				}
 				return emailAccount.getLoginState();
