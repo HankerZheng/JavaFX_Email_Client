@@ -21,14 +21,16 @@ public class FolderUpdateService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-				for(;;){
+				Thread.currentThread().setName("FolderUpdateService");
+				for(int loopCount = 1;;loopCount++){
+					Thread.currentThread().setName("FolderUpdateService-" + loopCount);
 					try{
 						Thread.sleep(10000);
 						if (!FetchFolderService.noServicesActive()){
 							System.out.println("Active Folder Fetch Service detected!");
 							continue;
 						}
-						System.out.println("Check all the folders!");
+						System.out.println(Thread.currentThread().getName() + ": Check all the folders!");
 						for (Folder folder: folderList){
 							if(folder.getType() != Folder.HOLDS_FOLDERS && folder.isOpen()){
 								folder.getMessageCount();

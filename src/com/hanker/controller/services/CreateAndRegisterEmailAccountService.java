@@ -39,6 +39,7 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailConstants
 		return new Task<EmailConstants>(){
 			@Override
 			protected EmailConstants call() throws Exception {
+				Thread.currentThread().setName("CreateAndRegisterEmailAccountService");
 				// connecting to server and authenticate the account
 				EmailAccountBean emailAccount = new EmailAccountBean(emailAddress, password);
 				if (emailAccount.getLoginState() == EmailConstants.LOGIN_STATE_SUCCESS){

@@ -11,7 +11,6 @@ import javax.mail.internet.MimeBodyPart;
 
 import com.hanker.model.EmailMessageBean;
 
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.web.WebEngine;
@@ -28,7 +27,7 @@ import javafx.scene.web.WebEngine;
  * 
  * Note: All changes of the GUI should be done by the `FX Application Thread`
  */
-public class MessageRendererService implements Runnable{
+public class MessageRendererService extends Service<Void>{
 	
 	private EmailMessageBean messageBean;
 	private WebEngine messageRendererEngine;
@@ -41,6 +40,10 @@ public class MessageRendererService implements Runnable{
 	
 	public void setMessageBean(EmailMessageBean messageBean){
 		this.messageBean = messageBean;
+		// currentThread is FX Application Thread
+		this.setOnSucceeded(e -> {
+			messageRendererEngine.loadContent(sb.toString());
+		});
 	}
 	
 	/*
@@ -49,6 +52,7 @@ public class MessageRendererService implements Runnable{
 	private void renderMessage(){
 		// clear the string buffer
 		sb.setLength(0);
+		messageBean.clearAttachments();
 		// store the content of the message in `sb`
 		Message message = messageBean.getMessageRef();
 		parseDataFromMessage(message, sb);
@@ -56,15 +60,16 @@ public class MessageRendererService implements Runnable{
 	
 	private void parseDataFromMessage(Part message, StringBuffer sb){
 		try {
-			String contentType = message.getContentType();
-			if (contentType.contains("TEXT/HTML") || 
-					contentType.contains("TEXT/PLAIN") ||
-					contentType.contains("text")){
+			String contentType = message.getContentType().toLowerCase();
+			System.out.println(contentType);
+			if (contentType.contains("text/html")){
 				if (sb.length() == 0){
-					sb.append(message.getContent().toString());					
+					sb.append(message.getContent().toString());
 				}
-			} else if (contentType.toLowerCase().contains("application")){
+			} else if (contentType.contains("application") ||
+					contentType.contains("name=")){
 				MimeBodyPart mbp = (MimeBodyPart) message;
+				messageBean.addAttachment(mbp);
 			} else if (contentType.contains("multipart")){
 				Multipart mp = (Multipart) message.getContent();
 				for (int i = mp.getCount() - 1; i >= 0; i--){
@@ -80,14 +85,21 @@ public class MessageRendererService implements Runnable{
 		
 	}
 
+
 	@Override
-	public void run() {
+	protected Task<Void> createTask() {
 		// TODO Auto-generated method stub
-		renderMessage();
-		Platform.runLater(() -> {
-			messageRendererEngine.loadContent(sb.toString());						
-		});
-		
+		return new Task<Void>(){
+
+			@Override
+			protected Void call() throws Exception {
+				// TODO Auto-generated method stub
+				Thread.currentThread().setName("MessageRendererService-"+messageBean.getSubject());
+				renderMessage();
+				return null;
+			}
+			
+		};
 	}
 
 }

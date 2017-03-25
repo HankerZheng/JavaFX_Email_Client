@@ -50,6 +50,7 @@ public class ViewFactory {
 			loader.setController(controller);
 			parent = loader.load();
 		} catch (IOException e) {
+			e.printStackTrace();
 			return null;
 		}
 		scene = new Scene(parent);
@@ -74,6 +75,9 @@ public class ViewFactory {
 				}
 			} catch (NullPointerException e) {
 				System.out.println("Invalid image location!!!");
+				returnIcon = new ImageView();
+			} catch (Exception e){
+				e.printStackTrace();
 				returnIcon = new ImageView();
 			}
 			

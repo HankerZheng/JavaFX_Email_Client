@@ -1,6 +1,11 @@
 package com.hanker.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
 
 import com.hanker.model.table.AbstractTableItem;
 
@@ -8,10 +13,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class EmailMessageBean extends AbstractTableItem {
+	
 	private SimpleStringProperty subject;
 	private SimpleStringProperty sender;
 	private SimpleObjectProperty<SizeObject> size;
 	private Message messageRef;
+	
+	// Attachment Handling
+	private List<MimeBodyPart> attachmentList = new ArrayList<>();
+	private StringBuffer attachmentNames = new StringBuffer();
 	
 	public EmailMessageBean(String subject, String sender, int size, Message message, boolean isRead){
 		super(isRead);
@@ -27,6 +37,7 @@ public class EmailMessageBean extends AbstractTableItem {
 	public String getSubject(){
 		return subject.get();
 	}
+	
 	public SizeObject getSize(){
 		return size.get();
 	}
@@ -34,9 +45,33 @@ public class EmailMessageBean extends AbstractTableItem {
 		return messageRef;
 	}
 
+
+	public List<MimeBodyPart> getAttachmentList() {
+		return attachmentList;
+	}
+	public String getAttachmentNames() {
+		return attachmentNames.toString();
+	}
+	
+	public void addAttachment(MimeBodyPart mbp){
+		attachmentList.add(mbp);
+		try {
+			attachmentNames.append(mbp.getFileName() + ";");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	public boolean hasAttachments(){
+		return attachmentList.size() > 0;
+	}
+	
+	public void clearAttachments(){
+		this.attachmentList.clear();
+		this.attachmentNames.setLength(0);
+	}
+
 	@Override
 	public String toString() {
 		return "EmailMessageBean [subject=" + subject.getValue() + ", sender=" + sender.getValue() + ", size=" + size.getValue() + "]";
 	}
-
 }

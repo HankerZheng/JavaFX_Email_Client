@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.hanker.controller.services.CreateAndRegisterEmailAccountService;
 import com.hanker.controller.services.FolderUpdateService;
 import com.hanker.controller.services.MessageRendererService;
+import com.hanker.controller.services.SaveAttachmentService;
 import com.hanker.model.EmailConstants;
 import com.hanker.model.EmailMessageBean;
 import com.hanker.model.SizeObject;
@@ -14,12 +15,14 @@ import com.hanker.model.folder.EmailFolderBean;
 import com.hanker.model.table.BoldableRowFactory;
 import com.hanker.view.ViewFactory;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
@@ -46,17 +49,18 @@ public class MainController extends AbstractController{
     
     @FXML
     private WebView emailContentView;
+
+    @FXML
+    private Button downloadAttachmentBtn;
+
+    @FXML
+    private Label downloadLabel;
+    
+    @FXML
+    private ProgressBar downloadProgress;
     
     private MenuItem showDetails = new MenuItem("show details");
     
-    
-    @FXML
-    void btnClicked(ActionEvent event) {
-//		EmailAccountBean emailAccountBean = new EmailAccountBean(
-//				"hanker.test@gmail.com", "testzhengPassword");
-//		EmailFolderBean<String> folder = getModelAccess().getSelectedFolder();
-//		emailAccountBean.addEmailsToData(folder.getData(), folder.getValue());
-    }
     
     @FXML
     void changeReadProperty(ActionEvent event) {
@@ -83,14 +87,12 @@ public class MainController extends AbstractController{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ViewFactory viewFactory = ViewFactory.defaultViewFactory;
-		emailTableView.setRowFactory(e -> new BoldableRowFactory<>());
-		
-		// Service Initialization
-		MessageRendererService messageRendererService = new MessageRendererService(emailContentView.getEngine());
+		downloadLabel.setVisible(false);
+		downloadProgress.setVisible(false);
 
-		FolderUpdateService folderUpdateService = new FolderUpdateService(getModelAccess().getFolderList());
-		folderUpdateService.start();
-		
+		// EmailTableView bold functionality binding
+		emailTableView.setRowFactory(e -> new BoldableRowFactory<>());
+
 		// Bind the column with the field of type `EmailMessageBean`
 		senderCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("sender"));
 		subjectCol.setCellValueFactory(new PropertyValueFactory<EmailMessageBean, String>("subject"));
@@ -101,26 +103,30 @@ public class MainController extends AbstractController{
 		EmailFolderBean<String> root = new EmailFolderBean<>("");
 		emailTreeView.setRoot(root);
 		emailTreeView.setShowRoot(false);
-		
-		// connect to email server asynchronously
+
+		// Service Initialization
 		CreateAndRegisterEmailAccountService createAndRegisterEmailAccountService = new CreateAndRegisterEmailAccountService(
 				"hanker.test@gmail.com",
 				"testzhengPassword",
 				root,
 				getModelAccess());
+		MessageRendererService messageRendererService = new MessageRendererService(emailContentView.getEngine());
+		FolderUpdateService folderUpdateService = new FolderUpdateService(getModelAccess().getFolderList());
+		SaveAttachmentService saveAttachmentService = new SaveAttachmentService(downloadProgress, downloadLabel);
 		createAndRegisterEmailAccountService.start();
+		folderUpdateService.start();
 
 		// Initialize EmailTableView's right clicked menu
 		emailTableView.setContextMenu(new ContextMenu(showDetails));
 		
-		// On clicking the email folder, display all emails in that folder in emailTableView
+		// On clicking the email folder, display all e-mails in that folder in emailTableView
 		emailTreeView.setOnMouseClicked(e -> {
 			// get the selected email folder
-			EmailFolderBean<String> item = (EmailFolderBean<String>) emailTreeView.getSelectionModel().getSelectedItem();
-			if (item != null && !item.isTopElement()){
+			EmailFolderBean<String> folderBean = (EmailFolderBean<String>) emailTreeView.getSelectionModel().getSelectedItem();
+			if (folderBean != null && !folderBean.isTopElement() && folderBean != getModelAccess().getSelectedFolder()){
 				// display the e-mails in that selected folder
-				emailTableView.setItems(item.getData());
-				getModelAccess().setSelectedFolder(item);
+				emailTableView.setItems(folderBean.getData());
+				getModelAccess().setSelectedFolder(folderBean);
 				// clear the selected message
 				getModelAccess().setSelectedMessage(null);
 			}
@@ -128,9 +134,9 @@ public class MainController extends AbstractController{
 		// On clicking the email, display the content of that email in emailWebView
 		emailTableView.setOnMouseClicked(e -> {
 			EmailMessageBean messageBean = emailTableView.getSelectionModel().getSelectedItem();
-			if (messageBean != null){
+			if (messageBean != null && messageBean != getModelAccess().getSelectedMessage()){
 				messageRendererService.setMessageBean(messageBean);
-				Platform.runLater(messageRendererService);
+				messageRendererService.restart();
 				getModelAccess().setSelectedMessage(messageBean);
 			}
 		});
@@ -140,6 +146,15 @@ public class MainController extends AbstractController{
 			Stage stage = new Stage();
 			stage.setScene(scene);
 			stage.show();
+		});
+		
+		// On clicking the "Download Attachment" button
+		downloadAttachmentBtn.setOnAction( e -> {
+	    	EmailMessageBean messageBean = getModelAccess().getSelectedMessage();
+	    	if (messageBean != null && messageBean.hasAttachments()){
+	        	saveAttachmentService.setMessageBean(messageBean);
+	        	saveAttachmentService.restart();
+	    	}
 		});
 		
 		// After all the initialization check the connection

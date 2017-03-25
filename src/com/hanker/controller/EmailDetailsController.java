@@ -3,6 +3,7 @@ package com.hanker.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.hanker.controller.services.MessageRendererService;
 import com.hanker.model.EmailMessageBean;
 
 import javafx.fxml.FXML;
@@ -32,6 +33,9 @@ public class EmailDetailsController extends AbstractController{
 		EmailMessageBean messageBean = getModelAccess().getSelectedMessage();
 		subject.setText("Subject: " + messageBean.getSubject());
 		sender.setText("Sender: " + messageBean.getSender());
+		MessageRendererService msr = new MessageRendererService(emailDetails.getEngine());
+		msr.setMessageBean(messageBean);
+		msr.restart();
 	}
 
 }

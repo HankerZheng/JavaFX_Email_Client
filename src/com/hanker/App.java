@@ -13,12 +13,15 @@ public class App extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		ViewFactory viewFactory = ViewFactory.defaultViewFactory;
-		Scene scene = viewFactory.getMainScene();
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		
+	public void start(Stage primaryStage){
+		try{
+			ViewFactory viewFactory = ViewFactory.defaultViewFactory;
+			Scene scene = viewFactory.getMainScene();
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}catch (Exception e){
+			System.out.println(e.getCause());
+			e.printStackTrace();
+		}
 	}	
 }

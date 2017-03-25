@@ -33,7 +33,7 @@ public class FetchMessageOnFolderService extends Service<Void>{
 
 			@Override
 			protected Void call() throws Exception {
-				// TODO Auto-generated method stub
+				Thread.currentThread().setName("FetchMessageOnFolderService-"+ folder.getName());
 				if (folder.getType() != Folder.HOLDS_FOLDERS){
 					folder.open(Folder.READ_WRITE);
 				}
