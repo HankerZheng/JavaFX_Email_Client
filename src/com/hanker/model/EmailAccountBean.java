@@ -77,33 +77,5 @@ public class EmailAccountBean {
 	public String toString(){
 		return emailAddress;
 	}
-	
-//	
-//	/**
-//	 * Construct {@code EmailMessageBean} instances and add the instances
-//	 * into the data, that is where the message should be presented.
-//	 * @param data: the place to display the message
-//	 */
-//	public void addEmailsToData(ObservableList<EmailMessageBean> data, String folderName){
-//		try {
-//			Folder folder = store.getFolder(folderName);
-//			folder.open(Folder.READ_ONLY);
-//			for(int i = 1 ; i < folder.getMessageCount(); i ++){
-//				Message message = folder.getMessage(i);
-//				EmailMessageBean messageBean = new EmailMessageBean(
-//						message.getSubject(),
-//						message.getFrom()[0].toString(), 
-//						message.getSize(),
-//						"",
-//						message.getFlags().contains(Flag.SEEN));
-//				data.add(messageBean);
-//				System.out.println("Got: " + messageBean);
-//			}
-//		} catch (MessagingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-	
 
 }

@@ -30,6 +30,10 @@ public class ViewFactory {
 	private EmailDetailsController emailDetailsController;
 	private ComposeController composeController;
 	
+	public ModelAccess getModelAccess(){
+		return modelAccess;
+	}
+	
 	public Scene getMainScene(){
 		if (mainController == null){
 			mainController = new MainController(modelAccess);

@@ -1,6 +1,7 @@
 package com.hanker.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.mail.Message;
@@ -17,17 +18,20 @@ public class EmailMessageBean extends AbstractTableItem {
 	private SimpleStringProperty subject;
 	private SimpleStringProperty sender;
 	private SimpleObjectProperty<SizeObject> size;
+	private SimpleObjectProperty<Date> date;
+	
 	private Message messageRef;
 	
 	// Attachment Handling
 	private List<MimeBodyPart> attachmentList = new ArrayList<>();
 	private StringBuffer attachmentNames = new StringBuffer();
 	
-	public EmailMessageBean(String subject, String sender, int size, Message message, boolean isRead){
+	public EmailMessageBean(String subject, String sender, int size, Date date, Message message, boolean isRead){
 		super(isRead);
 		this.subject = new SimpleStringProperty(subject);
 		this.sender = new SimpleStringProperty(sender);
 		this.size = new SimpleObjectProperty<SizeObject>(new SizeObject(size));
+		this.date = new SimpleObjectProperty<Date>(date);
 		this.messageRef = message;
 	}
 	
@@ -43,6 +47,10 @@ public class EmailMessageBean extends AbstractTableItem {
 	}
 	public Message getMessageRef(){
 		return messageRef;
+	}
+	
+	public Date getDate(){
+		return date.get();
 	}
 
 

@@ -53,6 +53,9 @@ public class ModelAccess {
 	}
 	
 	public void addActiveAccount(EmailAccountBean account){
-		activeAccounts.add(account);
+		synchronized(activeAccounts){
+			activeAccounts.add(account);
+			activeAccounts.notifyAll();
+		}
 	}
 }

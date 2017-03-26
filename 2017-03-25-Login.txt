@@ -1,0 +1,23 @@
+Login in process should start at the very beginning of the program
+- EmailAcount is meant to be displayed rather than running in the background
+- Better to bind the authentication server with display service, because only after successful authentication, it can be displayed properly.
+
+Read account data from an external file
+- Java Doesn't provide nested Properties object
+- Don't know why `FileRead` can't find the `config.json` file
+
+For each account, create the EmailAccountBean and store them in ModelAccess
+The display server start inside the MainController
+- Email Account Authentication is a I/O-consuming operation
+- By the time `MainController` try to fetch folder for the email accounts in the `modelAccess`, the Authentication process has not finished yet
+- That is, there is no `emailAccountBean` stored in `modelAccess`
+- As a result, there would be no folder displayed in the `MainLayout`
+
+Add a new login server
+Add a warning server
+Automatically delete the account info if this account cant be logged in.
+
+
+Solution:
+1. Create a `EmailAccountUpdateService`. It would display added account folder in the emailTreeView
+2. Once there is a new account added into the `modelAccess.activeAccounts`, it will notify the `EmailAccountUpdateService`

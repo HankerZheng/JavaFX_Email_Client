@@ -14,9 +14,10 @@
       <TreeView fx:id="emailTreeView" layoutX="14.0" layoutY="54.0" prefHeight="585.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="54.0" />
       <TableView fx:id="emailTableView" layoutX="213.0" layoutY="55.0" prefHeight="208.0" prefWidth="630.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0">
         <columns>
-          <TableColumn fx:id="subjectCol" prefWidth="173.0" text="Subject" />
-          <TableColumn fx:id="senderCol" prefWidth="122.0" text="Sender" />
-            <TableColumn fx:id="sizeCol" prefWidth="76.0" text="Size" />
+          <TableColumn fx:id="subjectCol" prefWidth="193.0" text="Subject" />
+          <TableColumn fx:id="senderCol" prefWidth="230.0" text="Sender" />
+            <TableColumn fx:id="sizeCol" prefWidth="50.0" text="Size" />
+            <TableColumn fx:id="dateCol" prefWidth="156.0" text="Date" />
         </columns>
       </TableView>
       <WebView fx:id="emailContentView" layoutX="214.0" layoutY="265.0" prefHeight="237.0" prefWidth="637.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />

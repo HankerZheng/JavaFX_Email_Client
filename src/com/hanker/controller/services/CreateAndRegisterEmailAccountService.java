@@ -3,10 +3,10 @@ package com.hanker.controller.services;
 import com.hanker.controller.ModelAccess;
 import com.hanker.model.EmailAccountBean;
 import com.hanker.model.EmailConstants;
-import com.hanker.model.folder.EmailFolderBean;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.control.TreeItem;
 
 /*
  * This task do the several things asynchronously for you:
@@ -21,15 +21,14 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailAccountBe
 	
 	private String emailAddress;
 	private String password;
-	private EmailFolderBean<String> folderRoot;
+	TreeItem<String> root;
 	private ModelAccess modelAccess;
 	
 	
 	public CreateAndRegisterEmailAccountService(
-			String emailAddress, String password, EmailFolderBean<String> folderRoot, ModelAccess ma) {
+			String emailAddress, String password, ModelAccess ma) {
 		this.emailAddress = emailAddress;
 		this.password = password;
-		this.folderRoot = folderRoot;
 		this.modelAccess = ma;
 		
 		this.setOnSucceeded(e -> {
@@ -49,14 +48,6 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailAccountBe
 				Thread.currentThread().setName("CreateAndRegisterEmailAccountService");
 				// connecting to server and authenticate the account
 				EmailAccountBean emailAccount = new EmailAccountBean(emailAddress, password);
-				if (emailAccount.getLoginState() == EmailConstants.LOGIN_STATE_SUCCESS){
-					// Create new EmailFolderBean and put it into folderRoot
-					EmailFolderBean<String> emailFolderBean = new EmailFolderBean<>(emailAddress);
-					folderRoot.getChildren().add(emailFolderBean);
-					// Create and start FetchFolderService
-					FetchFolderService fetchFolderService = new FetchFolderService(emailFolderBean, emailAccount, modelAccess);
-					fetchFolderService.start();
-				}
 				return emailAccount;
 			}
 			

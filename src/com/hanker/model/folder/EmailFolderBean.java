@@ -65,6 +65,7 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 				message.getSubject(), 
 				message.getFrom()[0].toString(), 
 				message.getSize(),
+				message.getSentDate(),
 				message, 
 				message.getFlags().contains(Flag.SEEN));
 		if (pos < 0){
@@ -75,6 +76,10 @@ public class EmailFolderBean<T> extends TreeItem<String> {
 		if (!isRead){
 			incrementUnreadMessageCount(1);
 		}
+	}
+	
+	public String getCompleteName(){
+		return completeName;
 	}
 	
 	public boolean isTopElement(){

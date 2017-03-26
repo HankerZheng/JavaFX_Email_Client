@@ -47,6 +47,7 @@ public class FetchFolderService extends Service<Void> {
 		return new Task<Void>(){
 			@Override
 			protected Void call() throws Exception {
+				// Rename the Thread
 				Thread.currentThread().setName("FetchFolderService-"+ emailAccount.getEmailAddress());
 				if (emailAccount != null){
 					Folder[] folders = emailAccount.getStore().getDefaultFolder().list();

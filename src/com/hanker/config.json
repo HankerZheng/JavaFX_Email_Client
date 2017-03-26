@@ -1,0 +1,30 @@
+{
+    "accounts": [
+        {
+            "username": "hanker.test@gmail.com",
+            "password": "testzhengPassword"
+        },
+        {
+            "username": "hanker.test0@gmail.com",
+            "password": "testzhengPassword"
+        }
+
+    ],
+    "protocols": {        
+        "mail.store.protocol": "imaps",
+        "mail.transport.protocol": "smtp",
+        
+        "gmail": {
+            "mail.smtps.host": "smtp.gmail.com",
+            "mail.smtps.auth": "true",
+            "incomingHost": "imap.gmail.com",
+            "outgoingHost": "smtp.gmail.com"
+        }, 
+        "163": {
+            "mail.smtps.host": "smtp.163.com",
+            "mail.smtps.auth": "true",
+            "incomingHost": "imap.163.com",
+            "outgoingHost": "smtp.163.com"
+        }
+    }
+}
