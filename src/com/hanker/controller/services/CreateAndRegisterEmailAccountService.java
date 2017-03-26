@@ -17,7 +17,7 @@ import javafx.concurrent.Task;
  * 
  * That is, to bind the e-mail account with the root folder of each email account
  */
-public class CreateAndRegisterEmailAccountService extends Service<EmailConstants>{
+public class CreateAndRegisterEmailAccountService extends Service<EmailAccountBean>{
 	
 	private String emailAddress;
 	private String password;
@@ -31,14 +31,21 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailConstants
 		this.password = password;
 		this.folderRoot = folderRoot;
 		this.modelAccess = ma;
+		
+		this.setOnSucceeded(e -> {
+			EmailAccountBean thisAccount = this.getValue();
+			if (thisAccount.getLoginState().equals(EmailConstants.LOGIN_STATE_SUCCESS)){
+				modelAccess.addActiveAccount(thisAccount);
+			}
+		});
 	}
 
 
 	@Override
-	protected Task<EmailConstants> createTask() {
-		return new Task<EmailConstants>(){
+	protected Task<EmailAccountBean> createTask() {
+		return new Task<EmailAccountBean>(){
 			@Override
-			protected EmailConstants call() throws Exception {
+			protected EmailAccountBean call() throws Exception {
 				Thread.currentThread().setName("CreateAndRegisterEmailAccountService");
 				// connecting to server and authenticate the account
 				EmailAccountBean emailAccount = new EmailAccountBean(emailAddress, password);
@@ -50,7 +57,7 @@ public class CreateAndRegisterEmailAccountService extends Service<EmailConstants
 					FetchFolderService fetchFolderService = new FetchFolderService(emailFolderBean, emailAccount, modelAccess);
 					fetchFolderService.start();
 				}
-				return emailAccount.getLoginState();
+				return emailAccount;
 			}
 			
 		};

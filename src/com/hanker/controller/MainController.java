@@ -8,7 +8,6 @@ import com.hanker.controller.services.CreateAndRegisterEmailAccountService;
 import com.hanker.controller.services.FolderUpdateService;
 import com.hanker.controller.services.MessageRendererService;
 import com.hanker.controller.services.SaveAttachmentService;
-import com.hanker.model.EmailConstants;
 import com.hanker.model.EmailMessageBean;
 import com.hanker.model.SizeObject;
 import com.hanker.model.folder.EmailFolderBean;
@@ -31,6 +30,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 public class MainController extends AbstractController{
+	
+	// services
 
 	@FXML
     private TreeView<String> emailTreeView;
@@ -52,6 +53,9 @@ public class MainController extends AbstractController{
 
     @FXML
     private Button downloadAttachmentBtn;
+    
+    @FXML
+    private Button newEmailBtn;
 
     @FXML
     private Label downloadLabel;
@@ -60,7 +64,6 @@ public class MainController extends AbstractController{
     private ProgressBar downloadProgress;
     
     private MenuItem showDetails = new MenuItem("show details");
-    
     
     @FXML
     void changeReadProperty(ActionEvent event) {
@@ -157,10 +160,13 @@ public class MainController extends AbstractController{
 	    	}
 		});
 		
-		// After all the initialization check the connection
-		if (createAndRegisterEmailAccountService.getValue() == EmailConstants.LOGIN_STATE_SUCCESS){
-			System.out.println("Successful connection!");
-		}
+		// On clicking the "newEmailBtn", show a new window
+		newEmailBtn.setOnAction(e -> {
+			Scene scene = viewFactory.getComposeScene();
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.show();
+		});
 	}
 
 }

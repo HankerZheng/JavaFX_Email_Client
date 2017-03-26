@@ -3,6 +3,7 @@ package com.hanker.view;
 import java.io.IOException;
 
 import com.hanker.controller.AbstractController;
+import com.hanker.controller.ComposeController;
 import com.hanker.controller.EmailDetailsController;
 import com.hanker.controller.MainController;
 import com.hanker.controller.ModelAccess;
@@ -21,11 +22,13 @@ public class ViewFactory {
 	private final String DEFAULT_CSS = "css/style.css";
 	private final String EMAIL_DETAILS_FXML = "fxmls/EmailDetailsLayout.fxml";
 	private final String MAIN_FXML = "fxmls/MainLayout.fxml";
+	private final String COMPOSE_FXML = "fxmls/ComposeLayout.fxml";
 	
 	private ModelAccess modelAccess = new ModelAccess();
 	
 	private MainController mainController;
 	private EmailDetailsController emailDetailsController;
+	private ComposeController composeController;
 	
 	public Scene getMainScene(){
 		if (mainController == null){
@@ -39,6 +42,13 @@ public class ViewFactory {
 			emailDetailsController = new EmailDetailsController(modelAccess);
 		}
 		return initializeScene(EMAIL_DETAILS_FXML, emailDetailsController);
+	}
+	
+	public Scene getComposeScene(){
+		if (composeController == null){
+			composeController = new ComposeController(modelAccess);
+		}		
+		return initializeScene(COMPOSE_FXML, composeController);
 	}
 	
 	private Scene initializeScene(String fxmlPath, AbstractController controller){

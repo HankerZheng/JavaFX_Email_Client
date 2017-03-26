@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.HTMLEditor?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="666.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="32.0" layoutY="29.0" text="From:" AnchorPane.leftAnchor="30.0" />
+      <Label layoutX="32.0" layoutY="59.0" text="To:" AnchorPane.leftAnchor="30.0" />
+      <Label layoutX="32.0" layoutY="89.0" text="Subject:" AnchorPane.leftAnchor="30.0" />
+      <Button fx:id="addAttachBtn" layoutX="32.0" layoutY="119.0" mnemonicParsing="false" onAction="#addAttachAction" text="Attach" AnchorPane.leftAnchor="30.0" />
+      <Label fx:id="attachmentLabel" layoutX="117.0" layoutY="123.0" text="" />
+      <ChoiceBox fx:id="fromEmail" layoutX="117.0" layoutY="25.0" prefHeight="23.0" prefWidth="521.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="30.0" />
+      <TextField fx:id="toEmail" layoutX="117.0" layoutY="55.0" prefHeight="23.0" prefWidth="521.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="30.0" />
+      <TextField fx:id="subject" layoutX="117.0" layoutY="85.0" prefHeight="23.0" prefWidth="521.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="30.0" />
+      <HTMLEditor fx:id="contentEditor" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="32.0" layoutY="159.0" prefHeight="283.0" prefWidth="606.0" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="159.0" />
+      <Label fx:id="errorLabel" layoutX="31.0" layoutY="458.0" textFill="RED" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="31.0">
+         <font>
+            <Font name="Consolas" size="15.0" />
+         </font></Label>
+      <Button fx:id="sendBtn" layoutX="593.0" layoutY="456.0" mnemonicParsing="false" onAction="#sendAction" text="Send" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="30.0" />
+   </children>
+</AnchorPane>

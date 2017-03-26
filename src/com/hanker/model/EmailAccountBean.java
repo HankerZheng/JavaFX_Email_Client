@@ -3,15 +3,10 @@ package com.hanker.model;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
-import javax.mail.Flags.Flag;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 
-import javafx.collections.ObservableList;
 
 public class EmailAccountBean {
 	
@@ -41,6 +36,10 @@ public class EmailAccountBean {
 
 	public EmailConstants getLoginState() {
 		return loginState;
+	}
+	
+	public String getPassword(){
+		return password;
 	}
 
 	public EmailAccountBean(String emailAddress, String password){
@@ -74,6 +73,11 @@ public class EmailAccountBean {
 			loginState = EmailConstants.LOGIN_STATE_FAILED_BY_CREDENTIALS;
 		}
 	}
+	
+	public String toString(){
+		return emailAddress;
+	}
+	
 //	
 //	/**
 //	 * Construct {@code EmailMessageBean} instances and add the instances

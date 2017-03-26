@@ -9,20 +9,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TreeView fx:id="emailTreeView" layoutX="14.0" layoutY="14.0" prefHeight="370.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="40.0" />
-      <TableView fx:id="emailTableView" layoutX="213.0" layoutY="40.0" prefHeight="178.0" prefWidth="372.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0">
+      <TreeView fx:id="emailTreeView" layoutX="14.0" layoutY="54.0" prefHeight="585.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="54.0" />
+      <TableView fx:id="emailTableView" layoutX="213.0" layoutY="55.0" prefHeight="208.0" prefWidth="630.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0">
         <columns>
           <TableColumn fx:id="subjectCol" prefWidth="173.0" text="Subject" />
           <TableColumn fx:id="senderCol" prefWidth="122.0" text="Sender" />
             <TableColumn fx:id="sizeCol" prefWidth="76.0" text="Size" />
         </columns>
       </TableView>
-      <WebView fx:id="emailContentView" layoutX="214.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="220.0" />
-      <Button fx:id="downloadAttachmentBtn" layoutX="262.0" layoutY="9.0" mnemonicParsing="false" text="Download Attachment" />
-      <Button layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#changeReadProperty" text="Change ReadProperty" />
-      <Label fx:id="downloadLabel" layoutX="423.0" layoutY="3.0" text="Downloading Attachments..." AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="3.0" />
-      <ProgressBar fx:id="downloadProgress" layoutX="423.0" layoutY="19.0" prefHeight="4.0" prefWidth="163.0" progress="0.0" />
+      <WebView fx:id="emailContentView" layoutX="214.0" layoutY="265.0" prefHeight="237.0" prefWidth="637.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
+      <Button fx:id="downloadAttachmentBtn" layoutX="523.0" layoutY="16.0" mnemonicParsing="false" text="Download Attachment" />
+      <Button layoutX="19.0" layoutY="16.0" mnemonicParsing="false" onAction="#changeReadProperty" text="Change ReadProperty" />
+      <Label fx:id="downloadLabel" layoutX="681.0" layoutY="8.0" text="Downloading Attachments..." AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="8.0" />
+      <ProgressBar fx:id="downloadProgress" layoutX="681.0" layoutY="30.0" prefHeight="6.0" prefWidth="163.0" progress="0.0" />
+      <Button fx:id="newEmailBtn" layoutX="176.0" layoutY="16.0" mnemonicParsing="false" text="New Email" />
    </children>
 </AnchorPane>
