@@ -21,3 +21,8 @@ Automatically delete the account info if this account cant be logged in.
 Solution:
 1. Create a `EmailAccountUpdateService`. It would display added account folder in the emailTreeView
 2. Once there is a new account added into the `modelAccess.activeAccounts`, it will notify the `EmailAccountUpdateService`
+
+
+What would happen if there is a new account comming and `EmailAccountUpdateService` hasn't execute `accounts.wait()` method ?
+
+Since `wait()` and `notifyAll()` are surrounded by `synchronized` keyword, if thread is currently executing `EmailAccountUpdateService`, the other thread won't be able to acquire the lock of `accounts`. Therefore, a new account can't be added into the `accounts` before the `EmailAccountUpdateService` executes the `wait()` method, in which this thread would give out the lock.

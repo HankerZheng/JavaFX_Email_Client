@@ -30,8 +30,8 @@ public class AccountUpdateService extends Service<Void>{
 			protected Void call() throws Exception {
 				for(;;){
 					List<EmailAccountBean> accounts = modelAccess.getActiveAccounts();
+					System.out.println("New Account Detected!");
 					synchronized(accounts){
-						System.out.println("New Account Detected!");
 						for (int i = loadedCount; i < accounts.size(); i ++){
 							EmailAccountBean thisAccount = modelAccess.getActiveAccounts().get(i);
 							EmailFolderBean<String> accountFolder = new EmailFolderBean<>(thisAccount.getEmailAddress());
@@ -44,7 +44,7 @@ public class AccountUpdateService extends Service<Void>{
 							FetchFolderService.start();
 							loadedCount ++;
 						}
-						modelAccess.getActiveAccounts().wait();
+						accounts.wait();
 					}
 				}
 			}
