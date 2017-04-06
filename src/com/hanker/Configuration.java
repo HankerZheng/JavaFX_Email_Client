@@ -14,11 +14,11 @@ public class Configuration {
 	
 	private Configuration(){
 		HashMap<String, String> a0 = new HashMap<>();
-			a0.put("username", "hanker.test@gmail.com");
-			a0.put("password", "testzhengPassword");
+			a0.put("username", "xxXXX@gmail.com");
+			a0.put("password", "password");
 		HashMap<String, String> a1 = new HashMap<>();
-			a1.put("username", "hanker.test0@gmail.com");
-			a1.put("password", "testzhengPassword");
+			a1.put("username", "xxxx@gmail.com");
+			a1.put("password", "password");
 		accounts.add(a0);
 		accounts.add(a1);
 		
